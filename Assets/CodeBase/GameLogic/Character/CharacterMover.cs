@@ -66,7 +66,7 @@ namespace CodeBase.GameLogic.Character
 
     private void Move()
     {
-      var movementDirection = new Vector3(_inputService.Axis.x, 0, _inputService.Axis.y).normalized;
+      Vector3 movementDirection = new Vector3(_inputService.Axis.x, 0, _inputService.Axis.y).normalized;
 
       if (movementDirection.magnitude < _movementEpsilon)
       {
