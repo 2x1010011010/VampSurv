@@ -25,7 +25,13 @@ namespace CodeBase.GameLogic.Character
     private void Start()
     {
       _camera = Camera.main;
-      _camera?.GetComponent<CameraFollow>().SetTarget(gameObject);
+      
+      var cameraFollow = _camera?.GetComponent<CameraFollow>();
+
+      if (cameraFollow == null) return;
+      
+      if (cameraFollow.Target == null)
+        cameraFollow.SetTarget(gameObject);
     }
 
     private void Update()

@@ -8,10 +8,11 @@ namespace CodeBase.GameLogic.CameraLogic
     [SerializeField, BoxGroup("CAMERA SETUP")] private Vector3 _offset;
     [SerializeField, BoxGroup("CAMERA SETUP")] private Transform _targetTransform;
 
+    public Transform Target => _targetTransform;
+
     public void SetTarget(GameObject target)
     {
       _targetTransform = target.transform;
-      
     }
 
     private void LateUpdate()
