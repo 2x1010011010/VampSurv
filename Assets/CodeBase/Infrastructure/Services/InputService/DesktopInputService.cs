@@ -13,6 +13,5 @@ namespace CodeBase.Infrastructure.Services.InputService
 
     public bool IsAttackButtonDown() => 
       Input.GetButtonDown(FireButton);
-    
   }
 }
