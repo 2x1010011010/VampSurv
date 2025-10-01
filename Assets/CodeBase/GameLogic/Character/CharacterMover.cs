@@ -11,6 +11,8 @@ namespace CodeBase.GameLogic.Character
     [SerializeField, BoxGroup("CONTROLLER SETUP")] private float _movementSpeed = 10f;
     [SerializeField, BoxGroup("CONTROLLER SETUP")] private float _movementEpsilon = 0.001f;
     [SerializeField, BoxGroup("CONTROLLER SETUP")] private float _rotationSpeed = 750f;
+    
+    [SerializeField, BoxGroup("ANIMATION CONTROLLER")] private CharacterAnimator _animator;
 
     private Camera _camera;
     private IInputService _inputService;
@@ -43,7 +45,7 @@ namespace CodeBase.GameLogic.Character
         Vector3 direction = (worldPosition - transform.position);
         direction.y = 0f;
 
-        if (direction.sqrMagnitude > 0.001f)
+        if (direction.sqrMagnitude > +_movementEpsilon)
         {
           Quaternion targetRotation = Quaternion.LookRotation(direction);
           
@@ -59,7 +61,17 @@ namespace CodeBase.GameLogic.Character
     private void Move()
     {
       var movementDirection = new Vector3(_inputService.Axis.x, 0, _inputService.Axis.y).normalized;
+
+      if (movementDirection.magnitude < _movementEpsilon)
+      {
+        _animator.SetDirection(Vector3.zero);
+        return;
+      }
+      
       transform.position += movementDirection * (_movementSpeed * Time.deltaTime);
+      
+      Vector3 localDirection = transform.InverseTransformDirection(movementDirection).normalized;
+      _animator.SetDirection(localDirection);
     }
   }
 }
