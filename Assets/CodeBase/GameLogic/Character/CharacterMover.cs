@@ -11,7 +11,7 @@ namespace CodeBase.GameLogic.Character
     [SerializeField, BoxGroup("CONTROLLER SETUP")] private float _movementSpeed = 10f;
     [SerializeField, BoxGroup("CONTROLLER SETUP")] private float _movementEpsilon = 0.001f;
     [SerializeField, BoxGroup("CONTROLLER SETUP")] private float _rotationSpeed = 750f;
-    
+
     [SerializeField, BoxGroup("ANIMATION CONTROLLER")] private CharacterAnimator _animator;
 
     private Camera _camera;
@@ -25,11 +25,9 @@ namespace CodeBase.GameLogic.Character
     private void Start()
     {
       _camera = Camera.main;
-      
-      var cameraFollow = _camera?.GetComponent<CameraFollow>();
 
+      var cameraFollow = _camera?.GetComponent<CameraFollow>();
       if (cameraFollow == null) return;
-      
       if (cameraFollow.Target == null)
         cameraFollow.SetTarget(gameObject);
     }
@@ -42,25 +40,21 @@ namespace CodeBase.GameLogic.Character
 
     private void Rotate()
     {
-      Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
-      Plane plane = new Plane(Vector3.up, Vector3.zero);
-      if (plane.Raycast(ray, out float distance))
-      {
-        Vector3 worldPosition = ray.GetPoint(distance);
-        
-        Vector3 direction = (worldPosition - transform.position);
-        direction.y = 0f;
+      Vector3? lookAtPoint = _inputService.LookDirection;
+      if (lookAtPoint == null)
+        return;
 
-        if (direction.sqrMagnitude > +_movementEpsilon)
-        {
-          Quaternion targetRotation = Quaternion.LookRotation(direction);
-          
-          transform.rotation = Quaternion.RotateTowards(
-            transform.rotation,
-            targetRotation, 
-            _rotationSpeed * Time.deltaTime
-          );
-        }
+      Vector3 direction = lookAtPoint.Value - transform.position;
+      direction.y = 0f;
+
+      if (direction.sqrMagnitude > _movementEpsilon)
+      {
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
+        transform.rotation = Quaternion.RotateTowards(
+          transform.rotation,
+          targetRotation,
+          _rotationSpeed * Time.deltaTime
+        );
       }
     }
 
@@ -73,9 +67,9 @@ namespace CodeBase.GameLogic.Character
         _animator.SetDirection(Vector3.zero);
         return;
       }
-      
+
       transform.position += movementDirection * (_movementSpeed * Time.deltaTime);
-      
+
       Vector3 localDirection = transform.InverseTransformDirection(movementDirection).normalized;
       _animator.SetDirection(localDirection);
     }
