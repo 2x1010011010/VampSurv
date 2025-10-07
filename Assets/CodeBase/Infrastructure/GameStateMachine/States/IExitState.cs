@@ -1,7 +1,7 @@
 namespace CodeBase.Infrastructure.GameStateMachine.States
 {
-  public interface IState : IExitState
+  public interface IExitState
   {
-    void Enter();
+    void Exit();
   }
 }

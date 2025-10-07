@@ -6,6 +6,8 @@ namespace CodeBase.Infrastructure
     public const string HorizontalAxis = "Horizontal";
     public const string FireButton = "Fire";
 
-    public const string InitialScene = "InitialScene";
+    public const string InitialScene = "InitScene";
+    public const string MainMenuScene = "MainMenu";
+    public const string GameScene = "Game";
   }
 }

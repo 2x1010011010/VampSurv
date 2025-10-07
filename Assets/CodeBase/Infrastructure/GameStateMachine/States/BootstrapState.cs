@@ -25,10 +25,8 @@ namespace CodeBase.Infrastructure.GameStateMachine.States
       
     }
 
-    private void EnterLoadLevel()
-    {
-      
-    }
+    private void EnterLoadLevel() => 
+      _stateMachine.Enter<LoadLevelState, string>(Constants.GameScene);
 
     private void RegisterServices()
     {

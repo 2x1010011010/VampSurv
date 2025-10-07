@@ -4,30 +4,43 @@ using CodeBase.Infrastructure.GameStateMachine.States;
 
 namespace CodeBase.Infrastructure.GameStateMachine
 {
-  public class StateMachine : IStateMachine
+  public class StateMachine
   {
-    private Dictionary<Type, IState> _states;
-    private IState _currentState;
+    private readonly Dictionary<Type, IExitState> _states;
+    private IExitState _currentState;
     
     public StateMachine(SceneLoader sceneLoader)
     {
-      _states = new Dictionary<Type, IState>()
+      _states = new Dictionary<Type, IExitState>()
       {
         [typeof(BootstrapState)] = new BootstrapState(this, sceneLoader),
+        [typeof(LoadLevelState)] = new LoadLevelState(this, sceneLoader),
       };
     }
     
-    public void Enter<TState>() where TState : IState
+    public void Enter<TState>() where TState : class, IState
     {
-      _currentState?.Exit();
-      IState state = _states[typeof(TState)];
-      _currentState = state;
-      _currentState.Enter();
+      IState state = ChangeState<TState>();
+      state.Enter();
     }
 
-    public void Exit<TState>() where TState : IState
+    public void Enter<TState, TPayload>(TPayload payload) where TState : class, IPayloadState<TPayload>
     {
-      throw new System.NotImplementedException();
+      IPayloadState<TPayload> state = ChangeState<TState>();
+      state.Enter(payload);
+    }
+
+    private TState ChangeState<TState>() where TState : class, IExitState
+    {
+      _currentState?.Exit();
+      TState state = GetState<TState>();
+      _currentState = state;
+      return state;  
+    }
+
+    private TState GetState<TState>() where TState : class, IExitState
+    {
+      return _states[typeof(TState)] as TState;
     }
   }
 }
