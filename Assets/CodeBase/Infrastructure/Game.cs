@@ -1,4 +1,6 @@
+using CodeBase.Infrastructure.GameStateMachine;
 using CodeBase.Infrastructure.Services.InputService;
+using TMPro;
 using UnityEngine;
 
 namespace CodeBase.Infrastructure
@@ -6,13 +8,9 @@ namespace CodeBase.Infrastructure
   public sealed class Game
   {
     public static IInputService InputService;
+    public StateMachine StateMachine;
 
-    public Game()
-    {
-      if(Application.isMobilePlatform)
-        InputService = new MobileInputService();
-      else
-        InputService = new DesktopInputService();
-    }
+    public Game(ICoroutineRunner coroutineRunner) => 
+      StateMachine = new StateMachine(new SceneLoader(coroutineRunner));
   }
 }
