@@ -22,16 +22,6 @@ namespace CodeBase.GameLogic.Character
       _inputService = Game.InputService;
     }
 
-    private void Start()
-    {
-      _camera = Camera.main;
-
-      var cameraFollow = _camera?.GetComponent<CameraFollow>();
-      if (cameraFollow == null) return;
-      if (cameraFollow.Target == null)
-        cameraFollow.SetTarget(gameObject);
-    }
-
     private void Update()
     {
       Rotate();
