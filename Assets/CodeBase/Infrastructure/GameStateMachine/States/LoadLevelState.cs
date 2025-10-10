@@ -1,4 +1,5 @@
 using CodeBase.GameLogic.CameraLogic;
+using CodeBase.Infrastructure.Factories;
 using UnityEngine;
 
 namespace CodeBase.Infrastructure.GameStateMachine.States
@@ -7,6 +8,7 @@ namespace CodeBase.Infrastructure.GameStateMachine.States
   {
     private readonly SceneLoader _sceneLoader;
     private readonly StateMachine _stateMachine;
+    private readonly IGameFactory _gameFactory;
     
     public LoadLevelState(StateMachine stateMachine, SceneLoader sceneLoader)
     {
@@ -24,11 +26,16 @@ namespace CodeBase.Infrastructure.GameStateMachine.States
 
     private void OnLoaded()
     {
-      var spawnPoint = GameObject.FindGameObjectWithTag(Constants.SpawnPointTag);
-      var character = Instantiate(Constants.CharacterPath, at: spawnPoint.transform);
-      character.transform.SetParent(null);
+      var character = _gameFactory.CreatePlayer
+        (
+          GameObject.FindGameObjectWithTag
+            (Constants.SpawnPointTag)
+            .transform
+        );
       
-      Instantiate(Constants.HUD);
+      character.transform.SetParent(null);
+
+      _gameFactory.CreateHud();
       
       CameraSetup(character);
       
@@ -43,18 +50,6 @@ namespace CodeBase.Infrastructure.GameStateMachine.States
       if (cameraFollow == null) return;
       if (cameraFollow.Target == null)
         cameraFollow.SetTarget(target);
-    }
-
-    private static GameObject Instantiate(string path)
-    {
-      var prefab = Resources.Load<GameObject>(path);
-      return Object.Instantiate(prefab);
-    }
-    
-    private static GameObject Instantiate(string path, Transform at)
-    {
-      var prefab = Resources.Load<GameObject>(path);
-      return Object.Instantiate(prefab, at);
     }
   }
 }
