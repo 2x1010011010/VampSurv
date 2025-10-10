@@ -1,8 +1,8 @@
 using UnityEngine;
 
-namespace CodeBase.Infrastructure.Factories
+namespace CodeBase.Infrastructure.Services.Factories
 {
-  public interface IGameFactory
+  public interface IGameFactory : IService
   {
     GameObject CreatePlayer(Transform spawnPoint);
     void CreateHud();

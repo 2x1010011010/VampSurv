@@ -1,5 +1,5 @@
 using CodeBase.GameLogic.CameraLogic;
-using CodeBase.Infrastructure.Factories;
+using CodeBase.Infrastructure.Services.Factories;
 using UnityEngine;
 
 namespace CodeBase.Infrastructure.GameStateMachine.States

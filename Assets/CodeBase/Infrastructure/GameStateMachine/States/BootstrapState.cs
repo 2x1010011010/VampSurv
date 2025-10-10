@@ -1,3 +1,6 @@
+using CodeBase.Infrastructure.Services;
+using CodeBase.Infrastructure.Services.AssetManagement;
+using CodeBase.Infrastructure.Services.Factories;
 using CodeBase.Infrastructure.Services.InputService;
 using UnityEngine;
 
@@ -12,7 +15,7 @@ namespace CodeBase.Infrastructure.GameStateMachine.States
     {
       _stateMachine = stateMachine;
       _sceneLoader = sceneLoader;
-    }
+    } 
 
     public void Enter()
     {
@@ -30,10 +33,13 @@ namespace CodeBase.Infrastructure.GameStateMachine.States
 
     private void RegisterServices()
     {
-      Game.InputService = RegisterInputService();
+      Game.InputService = InputService();
+
+      ServiceLocator.Container.RegisterSingle<IInputService>(InputService());
+      ServiceLocator.Container.RegisterSingle<IGameFactory>(new GameFactory(ServiceLocator.Container.Single<IAssetProvider>()));
     }
     
-    private static IInputService RegisterInputService()
+    private static IInputService InputService()
     {
       if(Application.isMobilePlatform)
         return new MobileInputService();
